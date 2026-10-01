@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------
+   Biến màu cho shadcn/ui (giao diện luôn tối theo thiết kế v7)
+   --------------------------------------------------------------- */
+@layer base {
+  :root {
+    --background: 217 59% 8%;
+    --foreground: 0 0% 100%;
+    --popover: 217 49% 12%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 70 91% 58%;
+    --primary-foreground: 217 52% 9%;
+    --muted: 217 40% 15%;
+    --muted-foreground: 215 20% 70%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.1;
+    --ring: 70 91% 58%;
+    color-scheme: dark;
+  }
+  html { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+  body { @apply bg-[#050B15] text-white antialiased; }
+  input[type='date'], input[type='time'] { color-scheme: dark; }
+}
+
+/* ---------------------------------------------------------------
+   Thành phần dùng chung
+   --------------------------------------------------------------- */
+@layer components {
+  .card { @apply rounded-3xl border border-white/[.07] bg-card shadow-card; }
+  .press { @apply touch-manipulation select-none transition-transform duration-100 active:scale-[.96]; }
+  .field {
+    @apply h-11 w-full rounded-2xl border border-white/10 bg-deep px-3.5 text-sm font-semibold text-white placeholder:text-slate-500
+           transition focus:border-lime focus:outline-none focus:ring-2 focus:ring-lime/20 disabled:opacity-50;
+  }
+  .h-page { @apply text-2xl font-extrabold leading-none tracking-tight; }
+  .icon-bubble { @apply grid place-items-center rounded-full bg-lime/10 text-lime; }
+  .seg { @apply grid rounded-2xl border border-white/[.07] bg-card p-1; }
+  .seg-btn { @apply press h-10 rounded-xl text-[13px] font-semibold text-slate-300 transition; }
+  .seg-on { @apply bg-lime font-bold text-ink shadow-glow; }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
