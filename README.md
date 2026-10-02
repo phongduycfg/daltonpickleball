@@ -77,7 +77,7 @@ Thông báo được gửi khi: có đăng ký mới (Quản trị viên), tài 
 
 ## 6. Triển khai Vercel
 
-> `vercel.json` đặt máy chủ ứng dụng ở **Sydney (syd1)**, cùng khu vực Supabase hiện tại (ap-southeast-2) — phải cùng khu vực với Supabase. Nếu Supabase ở khu vực khác, sửa `regions` cho khớp (Singapore: `sin1`, Tokyo: `hnd1`, Mỹ: `iad1`).
+> `vercel.json` đặt máy chủ ứng dụng ở **Singapore (sin1)**, cùng khu vực Supabase (ap-southeast-1) — phải cùng khu vực với Supabase. Nếu Supabase ở khu vực khác, sửa `regions` cho khớp (Sydney: `syd1`, Tokyo: `hnd1`, Mỹ: `iad1`).
 
 1. Push code lên GitHub → **Vercel → Add New Project** → chọn repo (Framework: Next.js, giữ mặc định).
 2. **Environment Variables**: thêm đủ các biến trong `.env.example`.
