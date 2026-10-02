@@ -1,9 +1,9 @@
 node_modules
 .next
 out
-.env
-.env.local
-.env*.local
+# Mọi file biến môi trường (kể cả bản sao lưu .bak) — chỉ giữ file mẫu
+.env*
+!.env.example
 *.tsbuildinfo
 next-env.d.ts
 .vercel

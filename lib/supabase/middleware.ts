@@ -12,9 +12,19 @@ const PUBLIC_PATHS = ['/login', '/auth/callback'];
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  // Thiếu cấu hình → báo rõ thay vì để middleware sập với lỗi khó hiểu
+  if (!url || !anonKey) {
+    return new NextResponse('Thiếu biến môi trường NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY trên máy chủ.', {
+      status: 500,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
+
   const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         getAll() {
