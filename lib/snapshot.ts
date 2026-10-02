@@ -5,7 +5,7 @@ import { paymentLabel } from './settlement';
 
 /**
  * Snapshot lưu vào periods.snapshot khi đóng kỳ — nguồn dữ liệu chỉ đọc
- * cho màn Thanh toán, Bảng xếp hạng và báo cáo PDF của kỳ cũ.
+ * cho màn Thanh toán, Xếp hạng và báo cáo PDF của kỳ cũ.
  */
 export const snapshotSchema = z.object({
   version: z.literal(1),

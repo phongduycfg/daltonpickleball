@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { ChartNoAxesColumn } from 'lucide-react';
 import { CrownMark, Laurel } from '@/components/brand/icons';
 import { MemberAvatar } from '@/components/shared/member-avatar';
@@ -13,8 +12,6 @@ export interface RankRow {
   avg: number;
 }
 
-export type RankMode = 'loss' | 'join';
-
 const PODIUM = {
   1: { laurel: '#E3C02E', ring: 'bg-[#FACC15] shadow-[0_0_24px_rgba(250,204,21,.45)]', badge: 'bg-[#FACC15]', box: 'min-h-[156px] border-[#FACC15]/40 bg-[linear-gradient(180deg,#6B5E12,#2B2A12)]' },
   2: { laurel: '#94A3D8', ring: 'bg-[#CBD5E1]', badge: 'bg-[#E2E8F0]', box: 'min-h-[138px] border-sky-300/25 bg-[linear-gradient(180deg,#1E3A64,#13213A)]' },
@@ -22,27 +19,8 @@ const PODIUM = {
 } as const;
 const RANK_BADGE = ['bg-[#FACC15] text-ink', 'bg-[#E2E8F0] text-ink', 'bg-[#F59E5B] text-ink'];
 
-/** Chuyển chế độ xếp hạng bằng link (giữ nguyên kỳ đang xem) */
-export function ModeSwitch({ mode, periodId }: { mode: RankMode; periodId: string }) {
-  const href = (m: RankMode) => `/leaderboard?period=${periodId}&mode=${m}`;
-  return (
-    <div className="seg grid-cols-2">
-      {(
-        [
-          ['loss', 'Xếp hạng thua trận'],
-          ['join', 'Xếp hạng tham gia'],
-        ] as const
-      ).map(([m, label]) => (
-        <Link key={m} href={href(m)} replace scroll={false} className={cn('seg-btn grid place-items-center', mode === m && 'seg-on')} aria-current={mode === m ? 'true' : undefined}>
-          {label}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-/** Bục vinh danh top 3 — vương miện chỉ trên hạng nhất */
-export function Podium({ rows, mode, sessionCount }: { rows: RankRow[]; mode: RankMode; sessionCount: number }) {
+/** Bục vinh danh top 3 thua nhiều nhất — vương miện chỉ trên hạng nhất */
+export function Podium({ rows }: { rows: RankRow[] }) {
   const top = rows.slice(0, 3).map((r, i) => ({ r, rank: (i + 1) as 1 | 2 | 3 }));
   const ordered = [top[1], top[0], top[2]].filter((x): x is { r: RankRow; rank: 1 | 2 | 3 } => !!x);
 
@@ -64,15 +42,15 @@ export function Podium({ rows, mode, sessionCount }: { rows: RankRow[]; mode: Ra
             </div>
             <div className={cn('w-full rounded-2xl border px-1.5 pb-1.5 pt-4 text-center', s.box)}>
               <div className="truncate text-sm font-bold">{r.name}</div>
-              <div className={cn('mt-1 text-[28px] font-extrabold leading-none', rank === 1 ? 'text-[#FDE047]' : 'text-lime')}>{mode === 'loss' ? r.losses : r.sessions}</div>
-              <div className="text-xs text-slate-200">{mode === 'loss' ? 'trận thua' : 'buổi chơi'}</div>
+              <div className={cn('mt-1 text-[28px] font-extrabold leading-none', rank === 1 ? 'text-[#FDE047]' : 'text-lime')}>{r.losses}</div>
+              <div className="text-xs text-slate-200">trận thua</div>
               <div className="mt-2 flex h-8 items-center justify-between gap-1 rounded-xl border border-white/10 bg-black/30 px-1.5">
                 <span className="flex items-center gap-0.5 whitespace-nowrap text-[11px] text-slate-300">
                   <ChartNoAxesColumn className="size-3 text-lime" aria-hidden />
-                  {mode === 'loss' ? 'TB/buổi' : 'Tỉ lệ'}
+                  TB/buổi
                 </span>
                 <b className={cn('text-[13px]', rank === 1 ? 'text-[#FDE047]' : 'text-white')}>
-                  {mode === 'loss' ? r.avg.toFixed(1) : `${Math.round((r.sessions / (sessionCount || 1)) * 100)}%`}
+                  {r.avg.toFixed(1)}
                 </b>
               </div>
             </div>
@@ -83,7 +61,7 @@ export function Podium({ rows, mode, sessionCount }: { rows: RankRow[]; mode: Ra
   );
 }
 
-/** Bảng xếp hạng đầy đủ */
+/** Bảng xếp hạng đầy đủ (thua trận) */
 export function RankTable({ rows, sessionCount }: { rows: RankRow[]; sessionCount: number }) {
   return (
     <div className="card overflow-hidden">

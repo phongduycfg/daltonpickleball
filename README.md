@@ -15,7 +15,7 @@ app/
     page.tsx                   Home: buổi đang diễn ra, ghi trận thua, ví "Tôi kỳ này"
     court/                     Sân đấu: dải ngày, lịch, chi tiết buổi, chia đội tính chấp
     payments/                  Thanh toán: phương án chia, kết quả, VietQR, thu chi, đóng kỳ, PDF
-    leaderboard/               Bảng xếp hạng theo tháng (thua trận / tham gia)
+    leaderboard/               Xếp hạng thua trận theo tháng
     admin/                     Quản trị: thành viên, duyệt, sân, chi phí, VietQR, sao lưu, thông báo
   auth/callback, auth/signout  OAuth callback · đăng xuất (POST)
   api/backup                   Tải file sao lưu JSON (chỉ Quản trị viên)
@@ -104,7 +104,7 @@ Quyền được kiểm tra **3 lớp**: giao diện (ẩn nút) → Server Acti
 - Tổng chi phí = sân + nước + khoản chi khác − khoản thu khác. Phải gánh làm tròn lên 1.000đ.
 - **Net = Phải gánh − Đã ứng** (dương: chuyển cho Kế toán · âm: được nhận lại).
 - Thanh toán 2 bước: thành viên báo đã chuyển → *Chờ xác nhận* → Kế toán xác nhận.
-- **Đóng kỳ:** server tính lại toàn bộ và lưu snapshot bất biến; buổi chưa chơi chuyển sang kỳ mới; xem lại kỳ cũ bằng ô chọn tháng (Thanh toán, Bảng xếp hạng) và xuất PDF.
+- **Đóng kỳ:** server tính lại toàn bộ và lưu snapshot bất biến; buổi chưa chơi chuyển sang kỳ mới; xem lại kỳ cũ bằng ô chọn tháng (Thanh toán, Xếp hạng) và xuất PDF.
 - **Tính chấp:** trình độ −3…+3; chênh 1 điểm tổng trình = 1 trái.
 
 ## 9. Sao lưu & khôi phục

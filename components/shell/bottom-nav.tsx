@@ -10,7 +10,7 @@ const NAV = [
   { href: '/', label: 'Home', icon: House },
   { href: '/court', label: 'Sân đấu', icon: PaddlesIcon },
   { href: '/payments', label: 'Thanh toán', icon: ClipboardList },
-  { href: '/leaderboard', label: 'Bảng xếp hạng', icon: Trophy },
+  { href: '/leaderboard', label: 'Xếp hạng', icon: Trophy },
   { href: '/admin', label: 'Quản trị', icon: Settings },
 ] as const;
 

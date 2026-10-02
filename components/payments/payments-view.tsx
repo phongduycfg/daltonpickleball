@@ -45,7 +45,7 @@ export function PaymentsView({
         </div>
       ) : null}
 
-      <PlanAndStats view={view} editable={isCurrent && can.finance} />
+      <PlanAndStats view={view} />
       {isCurrent ? <SettingsCard plan={view.plan} fixedRate={view.fixedRate} excluded={excluded} sessionsByMember={sessionsByMember} /> : null}
       {isCurrent && can.finance ? <FundConfirmCard fund={fund} rows={view.rows} /> : null}
       <ResultsTable rows={view.rows} isCurrent={isCurrent} exporting={exporting} onExport={() => void exportPdf()} />
