@@ -7,27 +7,47 @@ import { SCORER_ROLES, COST_ROLES } from '@/lib/constants';
 import { actionContext, check, ok, toActionError, type ActionResult } from '@/lib/action';
 import { createSessionSchema, money, uuid } from '@/lib/validation';
 import { sendPush } from '@/lib/push';
+import { todayVN } from '@/lib/dates';
 
 /** Làm mới toàn bộ màn hình trong nhóm (app) sau khi dữ liệu thay đổi */
 const refresh = () => revalidatePath('/', 'layout');
 
-export async function createSession(input: z.input<typeof createSessionSchema>): Promise<ActionResult> {
+/**
+ * Thêm buổi chơi.
+ * - Hôm nay / tương lai: lịch "Sắp diễn ra", bấm Bắt đầu khi ra sân.
+ * - Ngày đã qua (nhập bù / khôi phục): tạo thẳng ở trạng thái "Đã kết thúc" qua RPC create_past_session
+ *   để điểm danh và ghi trận thua ngay. Chỉ nhập bù được trong kỳ đang mở.
+ */
+export async function createSession(input: z.input<typeof createSessionSchema>): Promise<ActionResult<{ id: string; past: boolean }>> {
   try {
     const v = createSessionSchema.parse(input);
     const { supabase, me } = await actionContext(SCORER_ROLES);
-    check(
-      await supabase.from('sessions').insert({
-        period_id: v.periodId,
-        venue_id: v.venueId,
-        play_date: v.date,
-        start_time: v.start,
-        end_time: v.end,
-        cost: v.cost,
-        created_by: me.id,
-      }),
+
+    if (v.date < todayVN()) {
+      const { data } = check(
+        await supabase.rpc('create_past_session', { p_venue: v.venueId, p_date: v.date, p_start: v.start, p_end: v.end, p_cost: v.cost }),
+      );
+      refresh();
+      return ok({ id: data as string, past: true });
+    }
+
+    const { data } = check(
+      await supabase
+        .from('sessions')
+        .insert({
+          period_id: v.periodId,
+          venue_id: v.venueId,
+          play_date: v.date,
+          start_time: v.start,
+          end_time: v.end,
+          cost: v.cost,
+          created_by: me.id,
+        })
+        .select('id')
+        .single(),
     );
     refresh();
-    return ok(undefined);
+    return ok({ id: (data as { id: string }).id, past: false });
   } catch (e) {
     return toActionError(e);
   }

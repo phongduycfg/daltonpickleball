@@ -48,6 +48,7 @@ npm run dev                     # http://localhost:3000
    - `supabase/migrations/20261002000000_preapproved_emails.sql`
    - `supabase/migrations/20261002010000_performance.sql`
    - `supabase/migrations/20261002020000_delete_session.sql`
+   - `supabase/migrations/20261002030000_past_sessions.sql`
 
    (Hoặc dùng CLI: `npx supabase init` → `npx supabase link --project-ref <ref>` → `npx supabase db push`, sau đó chạy `seed.sql` trong SQL Editor.)
 3. **Project Settings → API**: copy `URL`, `anon key`, `service_role key` vào `.env.local`.
@@ -99,6 +100,7 @@ Quyền được kiểm tra **3 lớp**: giao diện (ẩn nút) → Server Acti
 
 - **Chạm tên** = có mặt (0 trận thua) ↔ vắng. Không thể đánh vắng người đang có trận thua. Bấm **(+)** tự đánh dấu có mặt.
 - Chỉ **1 buổi đang diễn ra** tại một thời điểm; bắt đầu buổi tự đặt ngày = hôm nay (giờ Việt Nam).
+- **Nhập bù buổi đã qua:** chọn ngày đã qua khi thêm buổi → buổi được tạo ở trạng thái Đã kết thúc để điểm danh, ghi trận thua ngay (chỉ trong kỳ đang mở).
 - **Chi phí sân + nước** của mỗi buổi do Kế toán ứng.
 - **Phương án 1:** Phải gánh = trận thua × (Tổng chi phí ÷ tổng trận thua).
 - **Phương án 2:** Phải gánh = trận thua × đơn giá cố định + phần hụt chia đều (trừ người trong danh sách loại trừ).

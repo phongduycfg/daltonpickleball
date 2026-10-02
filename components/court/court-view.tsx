@@ -162,10 +162,10 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
               <div className="mt-3 font-bold">
                 Không có buổi chơi {weekdayShort(selDate)} {dayMonth(selDate)}
               </div>
-              {can.score && selDate >= today ? (
+              {can.score ? (
                 <Button variant="lime" className="mt-4 w-full" onClick={() => setNewOpen(true)}>
                   <Plus className="size-5" />
-                  Thêm buổi chơi
+                  {selDate < today ? 'Nhập bù buổi đã chơi' : 'Thêm buổi chơi'}
                 </Button>
               ) : null}
             </div>
@@ -206,7 +206,18 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
       {opened ? (
         <SessionSheetHost key={opened.id} session={opened} monthTotals={monthTotals} open onOpenChange={(v) => !v && setOpenId(null)} />
       ) : null}
-      <NewSessionSheet open={newOpen} onOpenChange={setNewOpen} defaultDate={selDate >= today ? selDate : today} />
+      <NewSessionSheet
+        open={newOpen}
+        onOpenChange={setNewOpen}
+        defaultDate={selDate}
+        today={today}
+        onCreated={({ id, date, past }) => {
+          setSelDate(date);
+          setView('day');
+          // Buổi nhập bù → mở chi tiết ngay để điểm danh và ghi trận thua
+          if (past) setOpenId(id);
+        }}
+      />
     </section>
   );
 }
