@@ -24,7 +24,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
       <RealtimeProvider>
         <div className="relative mx-auto min-h-[100dvh] max-w-[440px] overflow-x-hidden bg-bg bg-[radial-gradient(120%_60%_at_50%_0%,#0E1B30_0%,#08111F_60%)]">
           <AppHeader />
-          <main className="space-y-4 px-4 pb-[calc(96px+env(safe-area-inset-bottom))]">{children}</main>
+          <main className="space-y-4 px-4 pb-[calc(72px+env(safe-area-inset-bottom))]">{children}</main>
           <BottomNav live={live} payAlert={payAlert} />
         </div>
         <PushRegistrar />

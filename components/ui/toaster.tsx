@@ -2,12 +2,12 @@
 
 import { Toaster as Sonner } from 'sonner';
 
-/** Thông báo nổi (sonner) đặt phía trên bottom nav */
+/** Thông báo nổi (sonner) nằm ngay trên thanh điều hướng 56px (cộng vùng an toàn iPhone) */
 export function Toaster() {
   return (
     <Sonner
       position="bottom-center"
-      offset={96}
+      offset="calc(68px + env(safe-area-inset-bottom))"
       theme="dark"
       toastOptions={{
         classNames: {

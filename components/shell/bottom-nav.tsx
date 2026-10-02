@@ -21,10 +21,11 @@ export function BottomNav({ live, payAlert }: { live: boolean; payAlert: boolean
 
   return (
     <nav
-      className="fixed bottom-0 left-1/2 z-40 w-full max-w-[440px] -translate-x-1/2 rounded-t-[28px] border-t border-white/[.08] bg-nav pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-8px_20px_rgba(0,0,0,.4)]"
+      className="fixed bottom-0 left-1/2 z-40 w-full max-w-[440px] -translate-x-1/2 border-t border-white/[.08] bg-nav pb-[env(safe-area-inset-bottom)]"
       aria-label="Điều hướng chính"
     >
-      <div className="grid grid-cols-5">
+      {/* Cao 56px (chưa tính vùng an toàn của iPhone) — chuẩn thanh tab của Zalo, Facebook, iOS/Android */}
+      <div className="grid h-14 grid-cols-5">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = isActive(href);
           return (
@@ -33,10 +34,10 @@ export function BottomNav({ live, payAlert }: { live: boolean; payAlert: boolean
               href={href}
               prefetch
               aria-current={active ? 'page' : undefined}
-              className={cn('press relative flex min-w-0 flex-col items-center gap-1 pb-1.5 pt-3', active ? 'text-lime' : 'text-slate-300')}
+              className={cn('press relative flex min-w-0 flex-col items-center justify-center gap-1', active ? 'text-lime' : 'text-slate-400')}
             >
-              {active ? <span className="absolute -top-px h-1.5 w-12 rounded-b-full bg-lime/70" aria-hidden /> : null}
-              <span className={cn('relative size-6', active && 'drop-shadow-[0_0_8px_rgba(215,245,49,.55)]')}>
+              {active ? <span className="absolute top-0 h-[3px] w-8 rounded-b-full bg-lime" aria-hidden /> : null}
+              <span className="relative size-6">
                 <Icon className="size-6" strokeWidth={active ? 2.2 : 1.8} />
                 {href === '/payments' && payAlert && !active ? (
                   <span className="absolute -right-1.5 -top-1 size-3 rounded-full border-2 border-nav bg-live" aria-label="Có thanh toán cần xử lý" />
@@ -45,8 +46,7 @@ export function BottomNav({ live, payAlert }: { live: boolean; payAlert: boolean
                   <span className="absolute -right-1 -top-0.5 size-2.5 animate-blink rounded-full border-2 border-nav bg-live" aria-label="Đang có buổi chơi" />
                 ) : null}
               </span>
-              <span className={cn('whitespace-nowrap text-[11px] tracking-tight', active && 'font-semibold')}>{label}</span>
-              <span className={cn('mt-0.5 h-[3px] w-9 rounded-full', active ? 'bg-lime shadow-[0_0_10px_#D7F531]' : 'bg-transparent')} aria-hidden />
+              <span className={cn('whitespace-nowrap text-[11px] leading-none tracking-tight', active && 'font-semibold')}>{label}</span>
             </Link>
           );
         })}
