@@ -29,7 +29,7 @@ export function PeriodSelect({
           next.set('period', e.target.value);
           startTransition(() => router.replace(`${pathname}?${next.toString()}`, { scroll: false }));
         }}
-        className={cn('field !h-10 !w-auto appearance-none !rounded-xl !bg-card !pl-3 !pr-9 !text-[13px] !font-medium', pending && 'opacity-60')}
+        className={cn('field !h-10 !w-auto appearance-none !rounded-xl !bg-card !pl-3 !pr-9 !text-[13px] !font-semibold', pending && 'opacity-60')}
       >
         {periods.map((p) => (
           <option key={p.id} value={p.id}>

@@ -21,7 +21,7 @@ export function BottomNav({ live, payAlert }: { live: boolean; payAlert: boolean
 
   return (
     <nav
-      className="fixed bottom-0 left-1/2 z-40 w-full max-w-[440px] -translate-x-1/2 rounded-t-[28px] border-t border-white/[.08] bg-nav/95 pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-12px_30px_rgba(0,0,0,.45)] backdrop-blur-xl"
+      className="fixed bottom-0 left-1/2 z-40 w-full max-w-[440px] -translate-x-1/2 rounded-t-[28px] border-t border-white/[.08] bg-nav pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-8px_20px_rgba(0,0,0,.4)]"
       aria-label="Điều hướng chính"
     >
       <div className="grid grid-cols-5">
@@ -35,7 +35,7 @@ export function BottomNav({ live, payAlert }: { live: boolean; payAlert: boolean
               aria-current={active ? 'page' : undefined}
               className={cn('press relative flex min-w-0 flex-col items-center gap-1 pb-1.5 pt-3', active ? 'text-lime' : 'text-slate-300')}
             >
-              {active ? <span className="absolute -top-px h-1.5 w-12 rounded-b-full bg-lime/80 blur-[1.5px]" aria-hidden /> : null}
+              {active ? <span className="absolute -top-px h-1.5 w-12 rounded-b-full bg-lime/70" aria-hidden /> : null}
               <span className={cn('relative size-6', active && 'drop-shadow-[0_0_8px_rgba(215,245,49,.55)]')}>
                 <Icon className="size-6" strokeWidth={active ? 2.2 : 1.8} />
                 {href === '/payments' && payAlert && !active ? (

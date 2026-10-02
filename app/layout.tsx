@@ -7,7 +7,8 @@ import './globals.css';
 /** Font Be Vietnam Pro tự host (next/font) — hiển thị tiếng Việt chuẩn, không chặn render */
 const font = Be_Vietnam_Pro({
   subsets: ['latin', 'vietnamese'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  // Chỉ tải 4 độ đậm thực sự dùng (mỗi độ đậm × 2 bộ ký tự là 1 file font)
+  weight: ['400', '600', '700', '800'],
   display: 'swap',
   variable: '--font-sans',
 });

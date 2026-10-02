@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAppContext, getPeriods } from '@/lib/data';
+import { getAppContext, getArchivedSnapshot } from '@/lib/data';
 import { PeriodSelect } from '@/components/shared/period-select';
 import { ModeSwitch, Podium, RankTable, type RankMode, type RankRow } from '@/components/leaderboard/leaderboard-view';
 
@@ -7,17 +7,18 @@ export const metadata: Metadata = { title: 'Bảng xếp hạng' };
 
 /** Bảng xếp hạng theo tháng: thua trận hoặc tham gia (?period=&mode=) */
 export default async function LeaderboardPage({ searchParams }: { searchParams: Promise<{ period?: string; mode?: string }> }) {
-  const [{ period: requested, mode: rawMode }, ctx, periods] = await Promise.all([searchParams, getAppContext(), getPeriods()]);
+  const [{ period: requested, mode: rawMode }, ctx] = await Promise.all([searchParams, getAppContext()]);
   const mode: RankMode = rawMode === 'join' ? 'join' : 'loss';
-  const { period, result, members } = ctx;
+  const { period, periods, result, members } = ctx;
 
-  const archived = periods.find((p) => p.id === requested && p.closedAt && p.snapshot);
-  const selectable = periods.filter((p) => !p.closedAt || p.snapshot);
-  const shown = archived ?? period;
+  const selectable = periods.filter((p) => !p.closedAt || p.hasSnapshot);
+  const candidate = periods.find((p) => p.id === requested && p.closedAt && p.hasSnapshot);
+  const archivedSnapshot = candidate ? await getArchivedSnapshot(candidate.id) : null;
+  const shown = (archivedSnapshot && candidate) || period;
 
   const avatarOf = (id: string) => members.find((m) => m.id === id)?.avatarUrl ?? null;
-  const source: { memberId: string; name: string; losses: number; sessions: number }[] = archived?.snapshot ? archived.snapshot.rows : result.rows;
-  const sessionCount = archived?.snapshot ? archived.snapshot.sessionCount : result.sessionCount;
+  const source: { memberId: string; name: string; losses: number; sessions: number }[] = archivedSnapshot ? archivedSnapshot.rows : result.rows;
+  const sessionCount = archivedSnapshot ? archivedSnapshot.sessionCount : result.sessionCount;
 
   const rows: RankRow[] = source
     .filter((r) => r.sessions > 0)

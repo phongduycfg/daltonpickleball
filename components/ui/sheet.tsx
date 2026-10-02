@@ -26,10 +26,10 @@ export function Sheet({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <Dialog.Overlay className="fixed inset-0 z-[70] bg-black/75 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <Dialog.Content
           className={cn(
-            'fixed inset-x-0 bottom-0 z-[71] mx-auto max-h-[90dvh] w-full max-w-[440px] overflow-y-auto rounded-t-[28px] border-t border-white/10 bg-nav px-4 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 shadow-2xl',
+            'fixed inset-x-0 bottom-0 z-[71] mx-auto max-h-[90dvh] w-full max-w-[440px] overflow-y-auto overscroll-contain rounded-t-[28px] border-t border-white/10 bg-nav px-4 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 shadow-2xl',
             'data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom',
             className,
           )}

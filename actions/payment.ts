@@ -7,7 +7,7 @@ import { FINANCE_ROLES } from '@/lib/constants';
 import { actionContext, check, ok, toActionError, ActionError, type ActionResult } from '@/lib/action';
 import { ledgerItemSchema, uuid } from '@/lib/validation';
 import { sendPush } from '@/lib/push';
-import { getClubSettings, getMembers, getPeriodData, getPeriods, settleOpenPeriod, snapshotOfPeriod } from '@/lib/data';
+import { loadClub, settleOpenPeriod, snapshotOfPeriod } from '@/lib/data';
 import { vnd } from '@/lib/format';
 import { periodLabel } from '@/lib/dates';
 
@@ -119,12 +119,11 @@ export async function closePeriod(periodId: string, confirmCode: string): Promis
   try {
     const id = uuid.parse(periodId);
     const { supabase } = await actionContext(FINANCE_ROLES);
-    const periods = await getPeriods();
-    const period = periods.find((p) => p.id === id && !p.closedAt);
-    if (!period) throw new ActionError('Kỳ không tồn tại hoặc đã đóng');
+    const club = await loadClub();
+    if (!club?.active || club.period.id !== id) throw new ActionError('Kỳ không tồn tại hoặc đã đóng');
+    const { period, data, members, settings } = club;
     if (confirmCode.trim().toUpperCase() !== `T${period.month}`) throw new ActionError('Mã xác nhận không đúng');
 
-    const [data, members, settings] = await Promise.all([getPeriodData(id), getMembers(), getClubSettings()]);
     const { result } = settleOpenPeriod({ period, data, members });
     const snapshot = snapshotOfPeriod({ period, data, members, settings, result });
 

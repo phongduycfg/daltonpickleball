@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import type { Member } from '@/types/app';
 import { MemberAvatar } from '@/components/shared/member-avatar';
@@ -17,7 +18,7 @@ function toneOf(total: number, max: number): string {
  * 1 dòng ghi kèo: thứ hạng · tên (chạm = có mặt/vắng) · (−) số (+) · tổng tháng.
  * Nút 36px + khoảng đệm → vùng chạm thoải mái cho ngón cái.
  */
-export function LossRow({
+export const LossRow = memo(function LossRow({
   index,
   member,
   present,
@@ -40,9 +41,9 @@ export function LossRow({
   isKing: boolean;
   editable: boolean;
   pulseKey: number | null;
-  onToggle: () => void;
-  onInc: () => void;
-  onDec: () => void;
+  onToggle: (memberId: string) => void;
+  onInc: (memberId: string) => void;
+  onDec: (memberId: string) => void;
 }) {
   return (
     <div className="flex items-center gap-2 border-t border-white/[.06] px-3 py-2">
@@ -57,7 +58,7 @@ export function LossRow({
 
       <button
         type="button"
-        onClick={onToggle}
+        onClick={() => onToggle(member.id)}
         className={cn('press flex min-w-0 flex-1 items-center gap-2 text-left transition-opacity', present ? 'opacity-100' : 'opacity-40')}
         aria-pressed={present}
         aria-label={`${member.name} ${present ? 'có mặt' : 'vắng'} — chạm để đổi`}
@@ -72,7 +73,7 @@ export function LossRow({
       <div className="flex shrink-0 items-center gap-0.5">
         <button
           type="button"
-          onClick={onDec}
+          onClick={() => onDec(member.id)}
           disabled={!editable || !losses}
           className="press grid size-9 place-items-center rounded-xl bg-[#1B2840] text-slate-200 disabled:opacity-40"
           aria-label={`Giảm trận thua ${member.name}`}
@@ -88,7 +89,7 @@ export function LossRow({
         </span>
         <button
           type="button"
-          onClick={onInc}
+          onClick={() => onInc(member.id)}
           disabled={!editable}
           className="press grid size-9 place-items-center rounded-xl bg-lime text-ink shadow-[0_0_14px_rgba(215,245,49,.35)] disabled:opacity-40 disabled:shadow-none"
           aria-label={`Tăng trận thua ${member.name}`}
@@ -104,4 +105,4 @@ export function LossRow({
       </span>
     </div>
   );
-}
+});

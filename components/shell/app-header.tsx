@@ -26,7 +26,7 @@ export function AppHeader() {
 
       <div
         className={cn(
-          'ml-auto flex h-7 min-w-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 text-[11px] font-medium text-slate-200',
+          'ml-auto flex h-7 min-w-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 text-[11px] font-semibold text-slate-200',
           connected ? 'border-emerald-500/25 bg-[#0D2A22]' : 'border-amber-400/25 bg-[#2A230D]',
         )}
         role="status"

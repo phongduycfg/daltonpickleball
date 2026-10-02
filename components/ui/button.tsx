@@ -12,7 +12,7 @@ const buttonVariants = cva(
         lime: 'bg-lime font-bold text-ink shadow-glow hover:brightness-105',
         dark: 'border border-white/10 bg-card2 text-white hover:bg-[#182742]',
         ghost: 'text-slate-300 hover:bg-white/5',
-        outline: 'border border-white/30 bg-ink/70 text-white backdrop-blur',
+        outline: 'border border-white/30 bg-ink/85 text-white',
         danger: 'bg-live font-bold text-white',
         'danger-outline': 'border border-live/50 text-[#FCA5A5]',
       },

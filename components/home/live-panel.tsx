@@ -17,6 +17,15 @@ import { cn } from '@/lib/utils';
 
 const PREVIEW_ROWS = 5;
 
+/**
+ * Đồng hồ thời gian đã chơi — tách thành component riêng để mỗi giây
+ * chỉ vẽ lại đúng con số này, không vẽ lại cả bảng ghi kèo.
+ */
+function ElapsedClock({ startedAt }: { startedAt: string | null }) {
+  const now = useNow(1000, true);
+  return <span suppressHydrationWarning>{now === null ? '--:--:--' : elapsed(startedAt, now)}</span>;
+}
+
 /** Home: thẻ buổi chơi (đang diễn ra / gần nhất) + bảng ghi trận thua */
 export function LivePanel({ session, monthTotals }: { session: Session; monthTotals: Record<string, number> }) {
   const { members, venues, venue, can } = useClub();
@@ -25,7 +34,6 @@ export function LivePanel({ session, monthTotals }: { session: Session; monthTot
   const [detailOpen, setDetailOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const live = session.status === 'live';
-  const now = useNow(1000, live);
   const v = venue(session.venueId);
   const present = members.filter((m) => scoring.isPresent(m.id));
 
@@ -64,12 +72,12 @@ export function LivePanel({ session, monthTotals }: { session: Session; monthTot
               {v?.area ? <div className="mt-0.5 text-xs text-slate-300">{v.area}</div> : null}
             </div>
           </div>
-          <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-2xl border border-lime/40 bg-ink/85 px-3 py-2 shadow-[0_0_24px_rgba(215,245,49,.15)] backdrop-blur">
+          <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-2xl border border-lime/40 bg-ink/90 px-3 py-2 shadow-[0_0_16px_rgba(215,245,49,.15)]">
             {live ? <Clock className="size-5 text-lime" aria-hidden /> : <CircleCheck className="size-5 text-lime" aria-hidden />}
             <div className="text-center">
               <div className="text-[11px] text-lime/90">{live ? 'Đang diễn ra' : 'Đã kết thúc'}</div>
-              <div className="text-xl font-extrabold leading-none tabular-nums text-lime" suppressHydrationWarning>
-                {live ? (now === null ? '--:--:--' : elapsed(session.startedAt, now)) : `#${session.seq ?? '–'}`}
+              <div className="text-xl font-extrabold leading-none tabular-nums text-lime">
+                {live ? <ElapsedClock startedAt={session.startedAt} /> : `#${session.seq ?? '–'}`}
               </div>
             </div>
           </div>
@@ -117,7 +125,7 @@ export function LivePanel({ session, monthTotals }: { session: Session; monthTot
           <button
             type="button"
             onClick={() => setAttendOpen(true)}
-            className="press flex h-9 shrink-0 items-center gap-1 rounded-xl border border-white/10 bg-card2 px-2.5 text-xs font-medium"
+            className="press flex h-9 shrink-0 items-center gap-1 rounded-xl border border-white/10 bg-card2 px-2.5 text-xs font-semibold"
           >
             <UserPlus className="size-4" aria-hidden />
             Thêm<span className="hidden min-[420px]:inline">&nbsp;thành viên</span>

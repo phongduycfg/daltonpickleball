@@ -34,7 +34,6 @@ export function MemberAvatar({
   className?: string;
 }) {
   const s = SIZES[size];
-  const local = member.avatarUrl?.startsWith('blob:') ?? false;
   return (
     <div
       className={cn(
@@ -52,7 +51,10 @@ export function MemberAvatar({
           alt=""
           width={s.px}
           height={s.px}
-          unoptimized={local}
+          // Ảnh đại diện đã được thu nhỏ 256px WebP khi tải lên → tải thẳng từ Supabase CDN,
+          // không qua bộ tối ưu ảnh của Vercel (tránh thêm 1 chặng mạng + giới hạn gói miễn phí)
+          unoptimized
+          loading="lazy"
           className="absolute inset-0 size-full object-cover"
         />
       ) : null}

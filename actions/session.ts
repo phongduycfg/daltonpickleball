@@ -11,32 +11,6 @@ import { sendPush } from '@/lib/push';
 /** Làm mới toàn bộ màn hình trong nhóm (app) sau khi dữ liệu thay đổi */
 const refresh = () => revalidatePath('/', 'layout');
 
-/** (+)/(−) trận thua — nguyên tử trong DB, trả về số trận thua mới */
-export async function adjustLoss(sessionId: string, memberId: string, delta: 1 | -1): Promise<ActionResult<number>> {
-  try {
-    const input = z.object({ sessionId: uuid, memberId: uuid, delta: z.union([z.literal(1), z.literal(-1)]) }).parse({ sessionId, memberId, delta });
-    const { supabase } = await actionContext(SCORER_ROLES);
-    const { data } = check(await supabase.rpc('adjust_loss', { p_session: input.sessionId, p_member: input.memberId, p_delta: input.delta }));
-    refresh();
-    return ok(data ?? 0);
-  } catch (e) {
-    return toActionError(e);
-  }
-}
-
-/** Chạm tên: có mặt (0 trận thua) / vắng */
-export async function setAttendance(sessionId: string, memberId: string, present: boolean): Promise<ActionResult> {
-  try {
-    const input = z.object({ sessionId: uuid, memberId: uuid, present: z.boolean() }).parse({ sessionId, memberId, present });
-    const { supabase } = await actionContext(SCORER_ROLES);
-    check(await supabase.rpc('set_attendance', { p_session: input.sessionId, p_member: input.memberId, p_present: input.present }));
-    refresh();
-    return ok(undefined);
-  } catch (e) {
-    return toActionError(e);
-  }
-}
-
 export async function createSession(input: z.input<typeof createSessionSchema>): Promise<ActionResult> {
   try {
     const v = createSessionSchema.parse(input);

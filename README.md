@@ -45,6 +45,8 @@ npm run dev                     # http://localhost:3000
 2. **SQL Editor** → dán và chạy lần lượt:
    - `supabase/migrations/20261001000000_init.sql`
    - `supabase/seed.sql`
+   - `supabase/migrations/20261002000000_preapproved_emails.sql`
+   - `supabase/migrations/20261002010000_performance.sql`
 
    (Hoặc dùng CLI: `npx supabase init` → `npx supabase link --project-ref <ref>` → `npx supabase db push`, sau đó chạy `seed.sql` trong SQL Editor.)
 3. **Project Settings → API**: copy `URL`, `anon key`, `service_role key` vào `.env.local`.
@@ -74,6 +76,8 @@ Thành viên bật thông báo tại **Quản trị → Thông báo**. Trên iPh
 Thông báo được gửi khi: có đăng ký mới (Quản trị viên), tài khoản được duyệt, buổi chơi bắt đầu, thành viên báo đã chuyển khoản (Kế toán), Kế toán xác nhận / từ chối, đóng kỳ.
 
 ## 6. Triển khai Vercel
+
+> `vercel.json` đặt máy chủ ứng dụng ở **Singapore (sin1)** — phải cùng khu vực với Supabase. Nếu Supabase ở khu vực khác, sửa `regions` cho khớp (VD Tokyo: `hnd1`, Mỹ: `iad1`).
 
 1. Push code lên GitHub → **Vercel → Add New Project** → chọn repo (Framework: Next.js, giữ mặc định).
 2. **Environment Variables**: thêm đủ các biến trong `.env.example`.

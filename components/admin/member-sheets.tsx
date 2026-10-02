@@ -189,7 +189,7 @@ function ApprovalItem({ p }: { p: PendingMember }) {
       <div className="flex items-center gap-3">
         <div className="relative">
           <MemberAvatar member={p} size="md" />
-          <span className="absolute -bottom-0.5 -right-0.5 grid size-5 place-items-center rounded-full border-2 border-card bg-white text-[11px] font-black text-[#4285F4]" aria-hidden>
+          <span className="absolute -bottom-0.5 -right-0.5 grid size-5 place-items-center rounded-full border-2 border-card bg-white text-[11px] font-extrabold text-[#4285F4]" aria-hidden>
             G
           </span>
         </div>

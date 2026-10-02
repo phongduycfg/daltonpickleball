@@ -14,5 +14,5 @@ export const config = {
    */
   runtime: 'nodejs',
   // Bỏ qua file tĩnh, ảnh, manifest, service worker
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.svg|icon-192.png|icon-512.png|icon-maskable.png|apple-icon.png|manifest.webmanifest|sw.js|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.svg|icon-192.png|icon-512.png|icon-maskable.png|apple-icon.png|manifest.webmanifest|sw.js|robots.txt|court/|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)'],
 };

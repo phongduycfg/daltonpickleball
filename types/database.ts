@@ -167,6 +167,7 @@ export interface Database {
         Returns: undefined;
       };
       close_period: { Args: { p_period: string; p_snapshot: Json }; Returns: string };
+      app_snapshot: { Args: Record<string, never>; Returns: Json };
     };
     Enums: {
       app_role: AppRole;

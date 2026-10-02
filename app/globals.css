@@ -22,7 +22,9 @@
     --ring: 70 91% 58%;
     color-scheme: dark;
   }
-  html { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+  html { -webkit-tap-highlight-color: transparent; }
+  /* Chặn hiệu ứng kéo-dãn lan ra ngoài trang (tránh giật khi cuộn tới cuối) */
+  body { overscroll-behavior-y: contain; }
   body { @apply bg-[#050B15] text-white antialiased; }
   input[type='date'], input[type='time'] { color-scheme: dark; }
 }

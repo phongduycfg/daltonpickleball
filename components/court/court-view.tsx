@@ -141,7 +141,7 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
                   type="button"
                   onClick={() => setOpenId(featured.id)}
                   className={cn(
-                    'press ml-auto flex h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border-2 bg-ink/70 px-3 text-[13px] font-bold backdrop-blur',
+                    'press ml-auto flex h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border-2 bg-ink/85 px-3 text-[13px] font-bold',
                     featured.status === 'live' ? 'border-lime text-lime' : 'border-white/30 text-white',
                   )}
                 >
@@ -235,7 +235,7 @@ function SessionCard({ session, onOpen, footer, dateLine = false }: { session: S
         <button
           type="button"
           onClick={onOpen}
-          className="press ml-auto flex h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-white/30 bg-ink/70 px-3 text-[13px] font-bold backdrop-blur"
+          className="press ml-auto flex h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-white/30 bg-ink/85 px-3 text-[13px] font-bold"
         >
           Xem chi tiết
           <ChevronRight className="size-4" strokeWidth={2.6} aria-hidden />

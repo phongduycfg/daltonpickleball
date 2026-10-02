@@ -35,9 +35,9 @@ export function LossList({ scoring, monthTotals, limit }: { scoring: SessionScor
           isKing={kingId === m.id}
           editable={editable}
           pulseKey={pulse?.id === m.id ? pulse.n : null}
-          onToggle={() => toggle(m.id)}
-          onInc={() => inc(m.id)}
-          onDec={() => dec(m.id)}
+          onToggle={toggle}
+          onInc={inc}
+          onDec={dec}
         />
       ))}
     </div>

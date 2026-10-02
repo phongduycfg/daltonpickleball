@@ -44,12 +44,17 @@ const nextConfig: NextConfig = {
   experimental: {
     // Gói icon lớn: chỉ bundle icon thực sự dùng
     optimizePackageImports: ['lucide-react'],
+    // Giữ trang đã tải trong bộ nhớ trình duyệt → chuyển tab qua lại tức thì, không gọi lại server.
+    // Dữ liệu vẫn luôn mới nhờ Realtime (tự làm mới khi có thay đổi) và sau mỗi thao tác.
+    staleTimes: { dynamic: 180, static: 300 },
   },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
       // Service worker luôn lấy bản mới nhất
       { source: '/sw.js', headers: [{ key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' }] },
+      // Ảnh nền sân không đổi → cache 1 năm
+      { source: '/court/:file*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
     ];
   },
 };

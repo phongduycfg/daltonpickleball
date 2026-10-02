@@ -96,7 +96,7 @@ export function AdminView({ pending, items }: { pending: PendingMember[]; items:
                     👑
                   </span>
                 ) : null}
-                <span className={cn('whitespace-nowrap rounded-lg px-1.5 py-0.5 text-[11px] font-medium', ROLE_META[m.role].pill)}>{ROLE_META[m.role].label}</span>
+                <span className={cn('whitespace-nowrap rounded-lg px-1.5 py-0.5 text-[11px] font-semibold', ROLE_META[m.role].pill)}>{ROLE_META[m.role].label}</span>
                 <span className="ml-auto grid size-9 shrink-0 place-items-center rounded-full bg-card2">
                   <Ellipsis className="size-4" aria-hidden />
                 </span>
@@ -152,7 +152,7 @@ export function AdminView({ pending, items }: { pending: PendingMember[]; items:
                 ) : null}
                 <div className="mt-1 flex items-center gap-2">
                   <span className="text-[11px] text-slate-300">{vnd(v.defaultCost)}/buổi</span>
-                  <span className={cn('flex h-5 items-center gap-1 rounded-md px-1.5 text-[11px] font-medium', v.isActive ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/10 text-slate-400')}>
+                  <span className={cn('flex h-5 items-center gap-1 rounded-md px-1.5 text-[11px] font-semibold', v.isActive ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/10 text-slate-400')}>
                     <span className={cn('size-1.5 rounded-full', v.isActive ? 'bg-done' : 'bg-slate-500')} aria-hidden />
                     {v.isActive ? 'Hoạt động' : 'Tạm ngưng'}
                   </span>

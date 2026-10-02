@@ -39,10 +39,10 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Quan trọng: getUser() xác thực token với Supabase Auth (không tin cookie mù quáng)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims(): làm mới phiên khi token sắp hết hạn và xác thực chữ ký JWT ngay tại server
+  // (không tin cookie mù quáng, nhưng cũng không tốn 1 lượt gọi Supabase Auth mỗi request như getUser()).
+  const { data: auth } = await supabase.auth.getClaims();
+  const user = auth?.claims.sub ?? null;
 
   const path = request.nextUrl.pathname;
   const isPublic = PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`));

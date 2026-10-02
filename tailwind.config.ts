@@ -38,7 +38,8 @@ const config: Config = {
       boxShadow: {
         glow: '0 0 24px rgba(215,245,49,.28)',
         'glow-sm': '0 0 14px rgba(215,245,49,.35)',
-        card: 'inset 0 1px 0 rgba(255,255,255,.04), 0 10px 30px rgba(0,0,0,.25)',
+        // Bóng nhẹ: bán kính nhỏ để cuộn mượt trên điện thoại cấu hình thấp
+        card: 'inset 0 1px 0 rgba(255,255,255,.04), 0 4px 12px rgba(0,0,0,.22)',
       },
       keyframes: {
         bump: { '0%,100%': { transform: 'scale(1)' }, '35%': { transform: 'scale(1.45)' } },
