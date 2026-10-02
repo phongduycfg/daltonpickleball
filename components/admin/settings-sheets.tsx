@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BellRing, Download, QrCode } from 'lucide-react';
+import { BellRing, Download, QrCode, Trash2, TriangleAlert } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Venue } from '@/types/app';
 import { Sheet } from '@/components/ui/sheet';
@@ -12,7 +12,7 @@ import { Field, SelectField } from '@/components/shared/select-field';
 import { useClub } from '@/components/providers/club-provider';
 import { useServerAction } from '@/hooks/use-server-action';
 import { useLocalPref } from '@/hooks/use-local-pref';
-import { saveVenue, updateBankSettings, updateGeneralSettings } from '@/actions/admin';
+import { deleteVenue, saveVenue, updateBankSettings, updateGeneralSettings } from '@/actions/admin';
 import { removePushSubscription, savePushSubscription } from '@/actions/profile';
 import { BANKS } from '@/lib/constants';
 import { periodCode } from '@/lib/dates';
@@ -27,10 +27,12 @@ const BLANK_VENUE = { name: '', area: '', defaultCost: 0, isActive: true };
 /** Thêm / sửa sân */
 export function VenueSheet({ venue, open, onOpenChange }: SheetProps & { venue: Venue | null }) {
   const [form, setForm] = useState(BLANK_VENUE);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const { pending, run } = useServerAction();
 
   useEffect(() => {
     if (open) setForm(venue ? { name: venue.name, area: venue.area, defaultCost: venue.defaultCost, isActive: venue.isActive } : BLANK_VENUE);
+    setConfirmDelete(false);
   }, [open, venue]);
 
   return (
@@ -63,6 +65,36 @@ export function VenueSheet({ venue, open, onOpenChange }: SheetProps & { venue: 
             Lưu sân
           </Button>
         </div>
+        {venue ? (
+          confirmDelete ? (
+            <div className="space-y-2 rounded-2xl border border-live/40 bg-[#3B1520]/60 p-3">
+              <p className="flex items-start gap-2 text-[13px] text-[#FDA4AF]">
+                <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
+                Xoá hẳn sân {venue.name}? Sân đã có buổi chơi sẽ không xoá được (giữ lịch sử) — khi đó hãy tắt Đang hoạt động.
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button type="button" size="sm" variant="dark" onClick={() => setConfirmDelete(false)}>
+                  Không xoá
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="danger"
+                  disabled={pending}
+                  onClick={() => run(() => deleteVenue(venue.id), { success: `Đã xoá ${venue.name}`, onSuccess: () => onOpenChange(false) })}
+                >
+                  <Trash2 />
+                  Xoá hẳn
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button type="button" variant="danger-outline" className="w-full" onClick={() => setConfirmDelete(true)}>
+              <Trash2 />
+              Xoá sân
+            </Button>
+          )
+        ) : null}
       </form>
     </Sheet>
   );

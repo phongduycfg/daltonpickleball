@@ -1,35 +1,29 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, ChevronRight, CloudUpload, Coins, Droplet, Ellipsis, Lock, MapPin, Plus, Settings, Users, Wallet } from 'lucide-react';
+import { Bell, ChevronRight, CloudUpload, Ellipsis, Lock, MapPin, Plus, Settings, Users, Wallet } from 'lucide-react';
 import type { Venue } from '@/types/app';
 import { CourtIcon } from '@/components/brand/icons';
-import { Sheet } from '@/components/ui/sheet';
 import { MemberAvatar } from '@/components/shared/member-avatar';
 import { useClub } from '@/components/providers/club-provider';
-import { LedgerForm, LedgerList } from '@/components/payments/ledger-card';
-import type { PayItemView } from '@/lib/payments-view';
 import { courtBackground } from '@/lib/court-art';
 import { ROLE_META } from '@/lib/constants';
-import { periodLabel } from '@/lib/dates';
 import { vnd } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { ApprovalsSheet, MemberSheet, MembersSheet, sortByRole, type PendingMember } from './member-sheets';
 import { BackupSheet, BankSheet, GeneralSheet, NotifySheet, VenueSheet } from './settings-sheets';
 
-type SheetName = 'members' | 'approvals' | 'venue' | 'items' | 'bank' | 'general' | 'backup' | 'notify';
+type SheetName = 'members' | 'approvals' | 'venue' | 'bank' | 'general' | 'backup' | 'notify';
 
-/** Màn Quản trị: thành viên · sân · chi phí · cài đặt */
-export function AdminView({ pending, items }: { pending: PendingMember[]; items: PayItemView[] }) {
-  const { me, members, venues, settings, period, can } = useClub();
+/** Màn Quản trị: thành viên · sân · cài đặt (thu/chi khác nằm ở tab Thanh toán) */
+export function AdminView({ pending }: { pending: PendingMember[] }) {
+  const { me, members, venues, settings, can } = useClub();
   const [sheet, setSheet] = useState<SheetName | null>(null);
   const [memberId, setMemberId] = useState<string | null>(null);
   const [editVenue, setEditVenue] = useState<Venue | null>(null);
 
   const open = (name: SheetName) => setSheet(name);
   const closeIf = (name: SheetName) => (v: boolean) => !v && sheet === name && setSheet(null);
-  const extTotal = items.reduce((a, i) => a + (i.kind === 'expense' ? i.amount : -i.amount), 0);
-  const firstVenue = venues[0];
 
   const settingRows = [
     { key: 'bank' as const, icon: Wallet, title: 'Cài đặt tính tiền', desc: 'Tài khoản nhận tiền, VietQR, cú pháp chuyển khoản', show: can.finance },
@@ -177,50 +171,6 @@ export function AdminView({ pending, items }: { pending: PendingMember[]; items:
         </div>
       </div>
 
-      {/* Chi phí */}
-      {can.finance ? (
-        <div className="card p-3">
-          <button type="button" onClick={() => open('items')} className="press flex w-full items-center gap-3 p-1 text-left">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#2A2E12] text-lime">
-              <Coins className="size-5" aria-hidden />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="text-base font-bold leading-tight">Quản lý chi phí</div>
-              <div className="text-xs text-slate-300">Chi phí sân, nước, khoản khác</div>
-            </div>
-            <ChevronRight className="size-5 text-slate-400" aria-hidden />
-          </button>
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              disabled={!can.admin || !firstVenue}
-              onClick={() => {
-                if (!firstVenue) return;
-                setEditVenue(firstVenue);
-                open('venue');
-              }}
-              className="press rounded-2xl border border-white/[.06] bg-deep p-2.5 text-left disabled:active:scale-100"
-            >
-              <CourtIcon className="block size-5 text-lime" />
-              <div className="mt-1.5 text-[11px] text-slate-200">Sân + nước</div>
-              <div className="truncate text-sm font-extrabold tabular-nums text-lime">{vnd(firstVenue?.defaultCost ?? 0)}</div>
-              <div className="text-[11px] text-slate-400">Mặc định/buổi</div>
-            </button>
-            <button type="button" onClick={() => open('items')} className="press rounded-2xl border border-white/[.06] bg-deep p-2.5 text-left">
-              <Droplet className="block size-5 text-sky-300" aria-hidden />
-              <div className="mt-1.5 text-[11px] text-slate-200">Chi phí khác</div>
-              <div className="truncate text-sm font-extrabold tabular-nums text-lime">{vnd(extTotal)}</div>
-              <div className="text-[11px] text-slate-400">{items.length} khoản</div>
-            </button>
-            <button type="button" onClick={() => open(can.admin ? 'general' : 'bank')} className="press rounded-2xl border border-white/[.06] bg-deep p-2.5 text-left">
-              <Settings className="block size-5 text-violet-300" aria-hidden />
-              <div className="mt-1.5 text-[11px] font-semibold text-slate-200">Nâng cao</div>
-              <div className="mt-0.5 text-[11px] leading-snug text-slate-400">Đơn giá, ngưỡng, VietQR</div>
-            </button>
-          </div>
-        </div>
-      ) : null}
-
       {/* Cài đặt */}
       {settingRows
         .filter((r) => r.show)
@@ -245,10 +195,6 @@ export function AdminView({ pending, items }: { pending: PendingMember[]; items:
       <GeneralSheet open={sheet === 'general'} onOpenChange={closeIf('general')} />
       <BackupSheet open={sheet === 'backup'} onOpenChange={closeIf('backup')} />
       <NotifySheet open={sheet === 'notify'} onOpenChange={closeIf('notify')} />
-      <Sheet open={sheet === 'items'} onOpenChange={closeIf('items')} title={`Chi phí khác · ${periodLabel(period)}`}>
-        <LedgerList items={items} editable={can.finance} />
-        {can.finance ? <LedgerForm /> : null}
-      </Sheet>
     </section>
   );
 }

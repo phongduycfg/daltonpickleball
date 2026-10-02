@@ -4,8 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { after } from 'next/server';
 import { z } from 'zod';
 import { FINANCE_ROLES } from '@/lib/constants';
-import { actionContext, check, ok, toActionError, type ActionResult } from '@/lib/action';
-import { bankSettingsSchema, generalSettingsSchema, memberUpdateSchema, venueSchema } from '@/lib/validation';
+import { actionContext, check, ok, toActionError, ActionError, type ActionResult } from '@/lib/action';
+import { bankSettingsSchema, generalSettingsSchema, memberUpdateSchema, uuid, venueSchema } from '@/lib/validation';
 import { sendPush } from '@/lib/push';
 
 const refresh = () => revalidatePath('/', 'layout');
@@ -34,6 +34,25 @@ export async function saveVenue(input: z.input<typeof venueSchema>): Promise<Act
     const row = { name: v.name, area: v.area, default_cost: v.defaultCost, is_active: v.isActive };
     if (v.id) check(await supabase.from('venues').update(row).eq('id', v.id));
     else check(await supabase.from('venues').insert(row));
+    refresh();
+    return ok(undefined);
+  } catch (e) {
+    return toActionError(e);
+  }
+}
+
+/**
+ * Xoá sân (chỉ Quản trị viên). Sân đã từng có buổi chơi thì giữ lại để không mất lịch sử —
+ * database chặn bằng khoá ngoại, khi đó gợi ý chuyển sang "Tạm ngưng".
+ */
+export async function deleteVenue(venueId: string): Promise<ActionResult> {
+  try {
+    const id = uuid.parse(venueId);
+    const { supabase } = await actionContext(['admin']);
+    const { error, count } = await supabase.from('venues').delete({ count: 'exact' }).eq('id', id);
+    if (error?.code === '23503') throw new ActionError('Sân đã có buổi chơi nên không xoá được — hãy tắt "Đang hoạt động" để tạm ngưng');
+    if (error) throw error;
+    if (!count) throw new ActionError('Không tìm thấy sân');
     refresh();
     return ok(undefined);
   } catch (e) {
