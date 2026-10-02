@@ -128,7 +128,11 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
               style={{ backgroundImage: `${OVERLAY_FEATURED},${courtBackground(venueTone(featured.venueId, venues))}` }}
             >
               <SessionStatusPill status={featured.status} className="self-start" />
-              <div className="mt-3 text-2xl font-extrabold leading-none tabular-nums">
+              <div className="mt-3 text-xs font-semibold text-lime">
+                {weekdayLong(featured.date)}, {fullDate(featured.date)}
+                {featured.seq ? ` · Buổi #${featured.seq}` : ''}
+              </div>
+              <div className="mt-1 text-2xl font-extrabold leading-none tabular-nums">
                 {featured.start} - {featured.end}
               </div>
               <div className="mt-1.5 text-[15px]">{venue(featured.venueId)?.name ?? 'Sân đã xoá'}</div>
@@ -189,7 +193,6 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
             <SessionCard
               key={s.id}
               session={s}
-              dateLine
               onOpen={() => setOpenId(s.id)}
               footer={<span className="text-xs text-slate-300">Dự kiến {vnd(s.cost)}</span>}
             />
@@ -209,7 +212,7 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
 }
 
 /** Thẻ buổi chơi nhỏ có ảnh nền sân */
-function SessionCard({ session, onOpen, footer, dateLine = false }: { session: Session; onOpen: () => void; footer: ReactNode; dateLine?: boolean }) {
+function SessionCard({ session, onOpen, footer }: { session: Session; onOpen: () => void; footer: ReactNode }) {
   const { venue, venues } = useClub();
   return (
     <div
@@ -218,15 +221,14 @@ function SessionCard({ session, onOpen, footer, dateLine = false }: { session: S
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          {dateLine ? (
-            <div className="text-xs font-semibold text-lime">
-              {weekdayLong(session.date)}, {fullDate(session.date)}
-            </div>
-          ) : null}
-          <div className={cn('text-xl font-extrabold tabular-nums', dateLine ? 'leading-tight' : 'leading-none')}>
+          <div className="text-xs font-semibold text-lime">
+            {weekdayLong(session.date)}, {fullDate(session.date)}
+            {session.seq ? ` · Buổi #${session.seq}` : ''}
+          </div>
+          <div className="text-xl font-extrabold leading-tight tabular-nums">
             {session.start} - {session.end}
           </div>
-          <div className={cn('truncate text-sm', !dateLine && 'mt-1.5')}>{venue(session.venueId)?.name ?? 'Sân đã xoá'}</div>
+          <div className="truncate text-sm">{venue(session.venueId)?.name ?? 'Sân đã xoá'}</div>
         </div>
         <SessionStatusPill status={session.status} />
       </div>

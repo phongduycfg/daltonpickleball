@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Coins, Flag, Play, RotateCcw } from 'lucide-react';
+import { Coins, Flag, Play, RotateCcw, Trash2, TriangleAlert } from 'lucide-react';
 import type { Session } from '@/types/app';
 import { Sheet } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { SessionStatusPill } from '@/components/shared/session-status';
 import { useClub } from '@/components/providers/club-provider';
 import { useServerAction } from '@/hooks/use-server-action';
 import type { SessionScoring } from '@/hooks/use-session-scoring';
-import { cancelSession, endSession, reopenSession, startSession, updateSessionCost } from '@/actions/session';
+import { deleteSession, endSession, reopenSession, startSession, updateSessionCost } from '@/actions/session';
 import { formatAmountInput, parseAmountInput } from '@/lib/format';
 import { sessionTitle } from '@/lib/session-view';
 import { LossList } from './loss-list';
@@ -30,10 +30,15 @@ export function SessionSheet({
 }) {
   const { can, venue } = useClub();
   const [cost, setCost] = useState(session.cost);
+  /** Bước xác nhận trước khi xoá buổi đã chơi (xoá luôn kết quả trận thua) */
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const { pending, run } = useServerAction();
 
   // Đồng bộ khi server trả về giá trị mới (realtime hoặc máy khác sửa)
   useEffect(() => setCost(session.cost), [session.cost]);
+  useEffect(() => {
+    if (!open) setConfirmDelete(false);
+  }, [open]);
 
   const v = venue(session.venueId);
   const dirty = cost !== session.cost;
@@ -106,11 +111,33 @@ export function SessionSheet({
                 <Button variant="lime" onClick={close}>
                   Xong
                 </Button>
+                {confirmDelete ? (
+                  <div className="col-span-2 space-y-2 rounded-2xl border border-live/40 bg-[#3B1520]/60 p-3">
+                    <p className="flex items-start gap-2 text-[13px] text-[#FDA4AF]">
+                      <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
+                      Xoá hẳn buổi này cùng {scoring.totalLosses} trận thua của {scoring.presentIds.length} người? Tiền trong kỳ sẽ được tính lại, không hoàn tác được.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="sm" variant="dark" onClick={() => setConfirmDelete(false)}>
+                        Không xoá
+                      </Button>
+                      <Button size="sm" variant="danger" disabled={pending} onClick={() => run(() => deleteSession(session.id), { success: 'Đã xoá buổi chơi', onSuccess: close })}>
+                        <Trash2 />
+                        Xoá hẳn
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button variant="danger-outline" className="col-span-2" onClick={() => setConfirmDelete(true)}>
+                    <Trash2 />
+                    Xoá buổi chơi
+                  </Button>
+                )}
               </>
             ) : null}
             {session.status === 'scheduled' ? (
               <>
-                <Button variant="dark" className="!text-[#FCA5A5]" disabled={pending} onClick={() => run(() => cancelSession(session.id), { success: 'Đã huỷ lịch', onSuccess: close })}>
+                <Button variant="dark" className="!text-[#FCA5A5]" disabled={pending} onClick={() => run(() => deleteSession(session.id), { success: 'Đã huỷ lịch', onSuccess: close })}>
                   Huỷ lịch
                 </Button>
                 <Button variant="lime" disabled={pending} onClick={() => run(() => startSession(session.id), { success: 'Đã bắt đầu buổi' })}>

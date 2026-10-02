@@ -152,6 +152,7 @@ export interface Database {
       start_session: { Args: { p_session: string }; Returns: undefined };
       end_session: { Args: { p_session: string }; Returns: undefined };
       reopen_session: { Args: { p_session: string }; Returns: undefined };
+      delete_session: { Args: { p_session: string }; Returns: undefined };
       report_payment: { Args: { p_period: string }; Returns: undefined };
       set_payment_status: { Args: { p_period: string; p_member: string; p_status: PayStatus }; Returns: undefined };
       admin_update_member: {

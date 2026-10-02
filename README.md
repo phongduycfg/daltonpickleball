@@ -47,6 +47,7 @@ npm run dev                     # http://localhost:3000
    - `supabase/seed.sql`
    - `supabase/migrations/20261002000000_preapproved_emails.sql`
    - `supabase/migrations/20261002010000_performance.sql`
+   - `supabase/migrations/20261002020000_delete_session.sql`
 
    (Hoặc dùng CLI: `npx supabase init` → `npx supabase link --project-ref <ref>` → `npx supabase db push`, sau đó chạy `seed.sql` trong SQL Editor.)
 3. **Project Settings → API**: copy `URL`, `anon key`, `service_role key` vào `.env.local`.

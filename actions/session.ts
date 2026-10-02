@@ -82,13 +82,15 @@ export async function reopenSession(sessionId: string): Promise<ActionResult> {
   }
 }
 
-/** Huỷ lịch (chỉ buổi chưa bắt đầu — RLS chặn các trạng thái khác) */
-export async function cancelSession(sessionId: string): Promise<ActionResult> {
+/**
+ * Xoá hẳn 1 buổi: lịch chưa chơi (huỷ lịch) hoặc buổi đã kết thúc (xoá kèm kết quả trận thua).
+ * RPC delete_session chặn buổi đang diễn ra / kỳ đã đóng và đánh số lại các buổi còn lại.
+ */
+export async function deleteSession(sessionId: string): Promise<ActionResult> {
   try {
     const id = uuid.parse(sessionId);
     const { supabase } = await actionContext(SCORER_ROLES);
-    const { count } = check(await supabase.from('sessions').delete({ count: 'exact' }).eq('id', id).eq('status', 'scheduled'));
-    if (!count) return { ok: false, error: 'Chỉ huỷ được buổi chưa bắt đầu' };
+    check(await supabase.rpc('delete_session', { p_session: id }));
     refresh();
     return ok(undefined);
   } catch (e) {
