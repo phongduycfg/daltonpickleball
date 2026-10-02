@@ -1,6 +1,6 @@
 # Dalton Pickleball
 
-Ứng dụng web (PWA) cho CLB Dalton Pickleball: lịch chơi, điểm danh, ghi trận thua realtime, chia tiền 2 phương án, thanh toán VietQR, đóng kỳ / xem lại theo tháng, bảng xếp hạng và quản trị thành viên.
+Ứng dụng web (PWA) cho CLB Dalton Pickleball: lịch chơi, điểm danh, ghi trận thua realtime, chia tiền 2 phương án, thanh toán VietQR, đóng kỳ linh hoạt / xem lại kỳ cũ, bảng xếp hạng và quản trị thành viên.
 
 **Công nghệ:** Next.js 15 (App Router, Server Components, Server Actions) · React 19 · TypeScript strict · Tailwind CSS + shadcn/ui (Radix) · Supabase (Auth Google, Postgres + RLS, Realtime, Storage) · Web Push (VAPID).
 
@@ -15,7 +15,7 @@ app/
     page.tsx                   Home: buổi đang diễn ra, ghi trận thua, ví "Tôi kỳ này"
     court/                     Sân đấu: dải ngày, lịch, chi tiết buổi, chia đội tính chấp
     payments/                  Thanh toán: phương án chia, kết quả, VietQR, thu chi, đóng kỳ, PDF
-    leaderboard/               Xếp hạng thua trận theo tháng
+    leaderboard/               Xếp hạng thua trận theo kỳ
     admin/                     Quản trị: thành viên, duyệt, sân, chi phí, VietQR, sao lưu, thông báo
   auth/callback, auth/signout  OAuth callback · đăng xuất (POST)
   api/backup                   Tải file sao lưu JSON (chỉ Quản trị viên)
@@ -44,11 +44,12 @@ npm run dev                     # http://localhost:3000
 1. Tạo project tại <https://supabase.com> (region Singapore cho độ trễ thấp từ Việt Nam).
 2. **SQL Editor** → dán và chạy lần lượt:
    - `supabase/migrations/20261001000000_init.sql`
-   - `supabase/seed.sql`
    - `supabase/migrations/20261002000000_preapproved_emails.sql`
    - `supabase/migrations/20261002010000_performance.sql`
    - `supabase/migrations/20261002020000_delete_session.sql`
    - `supabase/migrations/20261002030000_past_sessions.sql`
+   - `supabase/migrations/20261002040000_flexible_periods.sql`
+   - `supabase/seed.sql` (**chạy cuối cùng**)
 
    (Hoặc dùng CLI: `npx supabase init` → `npx supabase link --project-ref <ref>` → `npx supabase db push`, sau đó chạy `seed.sql` trong SQL Editor.)
 3. **Project Settings → API**: copy `URL`, `anon key`, `service_role key` vào `.env.local`.
@@ -107,7 +108,8 @@ Quyền được kiểm tra **3 lớp**: giao diện (ẩn nút) → Server Acti
 - Tổng chi phí = sân + nước + khoản chi khác − khoản thu khác. Phải gánh làm tròn lên 1.000đ.
 - **Net = Phải gánh − Đã ứng** (dương: chuyển cho Kế toán · âm: được nhận lại).
 - Thanh toán 2 bước: thành viên báo đã chuyển → *Chờ xác nhận* → Kế toán xác nhận.
-- **Đóng kỳ:** server tính lại toàn bộ và lưu snapshot bất biến; buổi chưa chơi chuyển sang kỳ mới; xem lại kỳ cũ bằng ô chọn tháng (Thanh toán, Xếp hạng) và xuất PDF.
+- **Đóng kỳ:** server tính lại toàn bộ và lưu snapshot bất biến; buổi chưa chơi chuyển sang kỳ mới; xem lại kỳ cũ bằng ô chọn kỳ (Thanh toán, Xếp hạng) và xuất PDF.
+- **Kỳ linh hoạt:** kỳ không gắn với tháng — đánh số Kỳ 1, Kỳ 2… kèm khoảng ngày; Kế toán đóng kỳ lúc nào cũng được (khi đã đủ số buổi), kỳ mới bắt đầu ngay. Mã kỳ trong nội dung chuyển khoản `[KY]` là `K5`, mã xác nhận đóng kỳ cũng là `K5`.
 - **Tính chấp:** trình độ −3…+3; chênh 1 điểm tổng trình = 1 trái.
 
 ## 9. Sao lưu & khôi phục

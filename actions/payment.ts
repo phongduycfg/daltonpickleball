@@ -9,7 +9,7 @@ import { ledgerItemSchema, uuid } from '@/lib/validation';
 import { sendPush } from '@/lib/push';
 import { loadClub, settleOpenPeriod, snapshotOfPeriod } from '@/lib/data';
 import { vnd } from '@/lib/format';
-import { periodLabel } from '@/lib/dates';
+import { periodCode, periodLabel } from '@/lib/dates';
 
 const refresh = () => revalidatePath('/', 'layout');
 
@@ -122,7 +122,7 @@ export async function closePeriod(periodId: string, confirmCode: string): Promis
     const club = await loadClub();
     if (!club?.active || club.period.id !== id) throw new ActionError('Kỳ không tồn tại hoặc đã đóng');
     const { period, data, members, settings } = club;
-    if (confirmCode.trim().toUpperCase() !== `T${period.month}`) throw new ActionError('Mã xác nhận không đúng');
+    if (confirmCode.trim().toUpperCase() !== periodCode(period)) throw new ActionError('Mã xác nhận không đúng');
 
     const { result } = settleOpenPeriod({ period, data, members });
     const snapshot = snapshotOfPeriod({ period, data, members, settings, result });

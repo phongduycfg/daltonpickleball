@@ -41,7 +41,7 @@ export function PaymentsView({
       {!isCurrent ? (
         <div className="flex items-center gap-2 rounded-2xl border border-sky-400/25 bg-sky-500/10 px-3 py-2.5 text-xs text-sky-200">
           <Archive className="size-4 shrink-0" aria-hidden />
-          Kỳ đã đóng · chỉ xem. Chọn tháng hiện tại để chỉnh sửa.
+          Kỳ đã đóng · chỉ xem. Chọn kỳ hiện tại để chỉnh sửa.
         </div>
       ) : null}
 

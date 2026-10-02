@@ -1,6 +1,6 @@
 -- =====================================================================
--- Dữ liệu khởi tạo bắt buộc: cấu hình CLB, sân mặc định, kỳ đang mở.
--- Chạy 1 lần sau migration (supabase db reset tự chạy file này).
+-- Dữ liệu khởi tạo bắt buộc: cấu hình CLB, sân mặc định, kỳ đầu tiên.
+-- Chạy SAU tất cả file trong supabase/migrations (supabase db reset tự chạy theo đúng thứ tự).
 -- =====================================================================
 insert into public.club_settings (id) values (true) on conflict (id) do nothing;
 
@@ -9,7 +9,7 @@ insert into public.venues (name, area, default_cost, sort_order) values
   ('Sân Pickle Park', 'Cầu Giấy, Hà Nội', 700000, 2)
 on conflict do nothing;
 
--- Kỳ đang mở = tháng hiện tại theo giờ Việt Nam
-insert into public.periods (year, month, fixed_rate)
-select extract(year from public.vn_today())::smallint, extract(month from public.vn_today())::smallint, 30000
+-- Kỳ 1 bắt đầu từ hôm nay (giờ Việt Nam); số kỳ tự tăng khi đóng kỳ
+insert into public.periods (fixed_rate)
+select 30000
 where not exists (select 1 from public.periods where closed_at is null);

@@ -21,7 +21,7 @@ const OVERLAY_FEATURED = 'linear-gradient(90deg,rgba(11,20,36,.92) 25%,rgba(11,2
 const OVERLAY_CARD = 'linear-gradient(90deg,rgba(11,20,36,.92) 30%,rgba(11,20,36,.5) 75%,rgba(11,20,36,.25))';
 
 /** Màn Sân đấu: dải ngày · buổi chơi trong ngày · lịch sắp tới · chia đội tính chấp */
-export function CourtView({ sessions, today, monthTotals }: { sessions: Session[]; today: string; monthTotals: Record<string, number> }) {
+export function CourtView({ sessions, today, periodTotals }: { sessions: Session[]; today: string; periodTotals: Record<string, number> }) {
   const { members, venues, venue, can } = useClub();
   const router = useRouter();
   const pathname = usePathname();
@@ -204,7 +204,7 @@ export function CourtView({ sessions, today, monthTotals }: { sessions: Session[
       <HandicapCard />
 
       {opened ? (
-        <SessionSheetHost key={opened.id} session={opened} monthTotals={monthTotals} open onOpenChange={(v) => !v && setOpenId(null)} />
+        <SessionSheetHost key={opened.id} session={opened} periodTotals={periodTotals} open onOpenChange={(v) => !v && setOpenId(null)} />
       ) : null}
       <NewSessionSheet
         open={newOpen}

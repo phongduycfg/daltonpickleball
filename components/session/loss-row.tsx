@@ -6,7 +6,7 @@ import type { Member } from '@/types/app';
 import { MemberAvatar } from '@/components/shared/member-avatar';
 import { cn } from '@/lib/utils';
 
-/** Màu ô "tổng tháng" theo tỉ lệ so với người thua nhiều nhất */
+/** Màu ô "tổng kỳ" theo tỉ lệ so với người thua nhiều nhất */
 function toneOf(total: number, max: number): string {
   const r = total / Math.max(1, max);
   if (r >= 0.75) return 'border-[#7F1D2D]/50 bg-[#3B1520] text-[#FB7185]';
@@ -15,7 +15,7 @@ function toneOf(total: number, max: number): string {
 }
 
 /**
- * 1 dòng ghi kèo: thứ hạng · tên (chạm = có mặt/vắng) · (−) số (+) · tổng tháng.
+ * 1 dòng ghi kèo: thứ hạng · tên (chạm = có mặt/vắng) · (−) số (+) · tổng kỳ.
  * Nút 36px + khoảng đệm → vùng chạm thoải mái cho ngón cái.
  */
 export const LossRow = memo(function LossRow({
@@ -23,8 +23,8 @@ export const LossRow = memo(function LossRow({
   member,
   present,
   losses,
-  monthTotal,
-  monthMax,
+  periodTotal,
+  periodMax,
   isKing,
   editable,
   pulseKey,
@@ -36,8 +36,8 @@ export const LossRow = memo(function LossRow({
   member: Member;
   present: boolean;
   losses: number;
-  monthTotal: number;
-  monthMax: number;
+  periodTotal: number;
+  periodMax: number;
   isKing: boolean;
   editable: boolean;
   pulseKey: number | null;
@@ -98,9 +98,9 @@ export const LossRow = memo(function LossRow({
         </button>
       </div>
 
-      <span className={cn('grid h-8 w-[54px] shrink-0 place-items-center rounded-lg border text-[11px] font-semibold', toneOf(monthTotal, monthMax))} title="Tổng trận thua trong tháng">
+      <span className={cn('grid h-8 w-[54px] shrink-0 place-items-center rounded-lg border text-[11px] font-semibold', toneOf(periodTotal, periodMax))} title="Tổng trận thua trong kỳ">
         <span className="whitespace-nowrap">
-          <b className="text-sm">{monthTotal}</b> Thua
+          <b className="text-sm">{periodTotal}</b> Thua
         </span>
       </span>
     </div>

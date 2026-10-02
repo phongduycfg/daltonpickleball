@@ -9,10 +9,10 @@ import { useServerAction } from '@/hooks/use-server-action';
 import { closePeriod } from '@/actions/payment';
 import type { FundSummary } from '@/lib/settlement';
 import type { PaymentsView } from '@/lib/payments-view';
-import { periodCode, periodLabel } from '@/lib/dates';
+import { periodCode, periodLabel, periodRange } from '@/lib/dates';
 import { vnd } from '@/lib/format';
 
-/** Đóng kỳ: lưu trữ snapshot (xem lại qua ô chọn tháng) và mở kỳ mới */
+/** Đóng kỳ bất cứ lúc nào: lưu trữ snapshot (xem lại qua ô chọn kỳ) và mở kỳ mới ngay hôm nay */
 export function ClosePeriodCard({ view, fund, exportPdf, exporting }: { view: PaymentsView; fund: FundSummary; exportPdf: () => Promise<boolean>; exporting: boolean }) {
   const { period } = useClub();
   const [open, setOpen] = useState(false);
@@ -35,7 +35,7 @@ export function ClosePeriodCard({ view, fund, exportPdf, exporting }: { view: Pa
       </span>
       <div className="min-w-0 flex-1">
         <div className="text-[15px] font-semibold">Đóng kỳ {label}</div>
-        <div className="text-xs text-slate-400">Lưu trữ, xem lại được · mở kỳ mới</div>
+        <div className="text-xs text-slate-400">{periodRange(period)} · đóng lúc nào cũng được, kỳ mới bắt đầu ngay</div>
       </div>
       <Button
         variant="danger-outline"
@@ -49,7 +49,7 @@ export function ClosePeriodCard({ view, fund, exportPdf, exporting }: { view: Pa
         Đóng kỳ
       </Button>
 
-      <Sheet open={open} onOpenChange={setOpen} title={`Đóng kỳ ${label}?`} description="Dữ liệu được lưu trữ, xem lại trong ô chọn tháng.">
+      <Sheet open={open} onOpenChange={setOpen} title={`Đóng kỳ ${label}?`} description={`${periodRange(period)} · dữ liệu được lưu trữ, xem lại trong ô chọn kỳ. Kỳ mới bắt đầu từ hôm nay.`}>
         <div className="space-y-3">
           <ul className="space-y-1.5 rounded-2xl border border-white/[.06] bg-deep p-3 text-sm">
             <li className="flex justify-between">

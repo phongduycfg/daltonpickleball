@@ -52,8 +52,11 @@ export interface LedgerItem {
 
 export interface Period {
   id: string;
-  year: number;
-  month: number;
+  /** Số thứ tự kỳ: Kỳ 1, Kỳ 2… (kỳ không gắn với tháng dương lịch) */
+  seq: number;
+  /** Ngày bắt đầu / kết thúc (YYYY-MM-DD); endDate = null khi kỳ đang mở */
+  startDate: string;
+  endDate: string | null;
   plan: 1 | 2;
   fixedRate: number;
   closedAt: string | null;

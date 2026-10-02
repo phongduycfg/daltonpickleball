@@ -5,7 +5,7 @@ import { Podium, RankTable, type RankRow } from '@/components/leaderboard/leader
 
 export const metadata: Metadata = { title: 'Xếp hạng' };
 
-/** Xếp hạng thua trận theo tháng (?period= để xem kỳ cũ) */
+/** Xếp hạng thua trận theo kỳ (?period= để xem kỳ cũ) */
 export default async function LeaderboardPage({ searchParams }: { searchParams: Promise<{ period?: string }> }) {
   const [{ period: requested }, ctx] = await Promise.all([searchParams, getAppContext()]);
   const { period, periods, result, members } = ctx;

@@ -81,7 +81,7 @@ export function useSessionScoring(session: Session) {
   const editable = can.score && session.status !== 'scheduled';
   const lossOf = useCallback((id: string) => current(id) ?? 0, [current]);
   const isPresent = useCallback((id: string) => current(id) !== null, [current]);
-  /** Chênh lệch giữa giá trị đang hiển thị và giá trị server (để cộng vào tổng tháng) */
+  /** Chênh lệch giữa giá trị đang hiển thị và giá trị server (để cộng vào tổng kỳ) */
   const pendingDelta = useCallback((id: string) => (current(id) ?? 0) - (server.get(id) ?? 0), [current, server]);
 
   const guard = useCallback((): boolean => {

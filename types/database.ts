@@ -55,8 +55,9 @@ export interface Database {
       periods: {
         Row: {
           id: string;
-          year: number;
-          month: number;
+          seq: number;
+          start_date: string;
+          end_date: string | null;
           plan: number;
           fixed_rate: number;
           opened_at: string;

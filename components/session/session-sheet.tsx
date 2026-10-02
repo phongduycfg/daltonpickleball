@@ -18,13 +18,13 @@ import { LossList } from './loss-list';
 export function SessionSheet({
   session,
   scoring,
-  monthTotals,
+  periodTotals,
   open,
   onOpenChange,
 }: {
   session: Session;
   scoring: SessionScoring;
-  monthTotals: Record<string, number>;
+  periodTotals: Record<string, number>;
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
@@ -86,7 +86,7 @@ export function SessionSheet({
               </span>
               <span className="text-xs text-slate-400">Chạm tên để điểm danh</span>
             </div>
-            <LossList scoring={scoring} monthTotals={monthTotals} />
+            <LossList scoring={scoring} periodTotals={periodTotals} />
           </div>
         ) : (
           <div className="rounded-2xl border border-white/[.06] bg-deep p-4 text-sm text-slate-300">

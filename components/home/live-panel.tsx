@@ -27,7 +27,7 @@ function ElapsedClock({ startedAt }: { startedAt: string | null }) {
 }
 
 /** Home: thẻ buổi chơi (đang diễn ra / gần nhất) + bảng ghi trận thua */
-export function LivePanel({ session, monthTotals }: { session: Session; monthTotals: Record<string, number> }) {
+export function LivePanel({ session, periodTotals }: { session: Session; periodTotals: Record<string, number> }) {
   const { members, venues, venue, can } = useClub();
   const scoring = useSessionScoring(session);
   const [attendOpen, setAttendOpen] = useState(false);
@@ -132,7 +132,7 @@ export function LivePanel({ session, monthTotals }: { session: Session; monthTot
           </button>
         </div>
         <div className="flex items-center justify-between gap-2 px-3 pb-2 text-[11px] text-slate-400">
-          <span>Chạm tên = có mặt · ô màu = tổng tháng</span>
+          <span>Chạm tên = có mặt · ô màu = tổng kỳ</span>
           {can.score ? (
             <button type="button" onClick={scoring.undo} disabled={!scoring.canUndo} className="press flex items-center gap-1 text-slate-300 disabled:opacity-30">
               <Undo2 className="size-3.5" aria-hidden />
@@ -140,7 +140,7 @@ export function LivePanel({ session, monthTotals }: { session: Session; monthTot
             </button>
           ) : null}
         </div>
-        <LossList scoring={scoring} monthTotals={monthTotals} limit={showAll ? undefined : PREVIEW_ROWS} />
+        <LossList scoring={scoring} periodTotals={periodTotals} limit={showAll ? undefined : PREVIEW_ROWS} />
         {members.length > PREVIEW_ROWS ? (
           <div className="p-3">
             <button
@@ -157,7 +157,7 @@ export function LivePanel({ session, monthTotals }: { session: Session; monthTot
       </div>
 
       <AttendanceSheet open={attendOpen} onOpenChange={setAttendOpen} scoring={scoring} />
-      <SessionSheet session={session} scoring={scoring} monthTotals={monthTotals} open={detailOpen} onOpenChange={setDetailOpen} />
+      <SessionSheet session={session} scoring={scoring} periodTotals={periodTotals} open={detailOpen} onOpenChange={setDetailOpen} />
     </>
   );
 }

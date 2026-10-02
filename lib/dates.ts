@@ -33,8 +33,15 @@ export const fullDate = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}
 /** "17:00:00" → "17:00" */
 export const hhmm = (t: string) => t.slice(0, 5);
 
-export const periodLabel = (p: { month: number; year: number }) => `Tháng ${p.month}/${p.year}`;
-export const periodCode = (p: { month: number }) => `T${p.month}`;
+/** "Kỳ 5" */
+export const periodLabel = (p: { seq: number }) => `Kỳ ${p.seq}`;
+/** Mã kỳ dùng trong nội dung chuyển khoản và xác nhận đóng kỳ: "K5" */
+export const periodCode = (p: { seq: number }) => `K${p.seq}`;
+/** Khoảng ngày của kỳ: "25/09 – 02/10" · "02/10 – nay" (thêm năm nếu khác năm hiện tại) */
+export function periodRange(p: { startDate: string; endDate: string | null }, today: string = todayVN()): string {
+  const fmt = (iso: string) => (iso.slice(0, 4) === today.slice(0, 4) ? dayMonth(iso) : fullDate(iso));
+  return `${fmt(p.startDate)} – ${p.endDate ? fmt(p.endDate) : 'nay'}`;
+}
 
 /** Thời gian đã trôi qua dạng 01:24:36 */
 export function elapsed(fromIso: string | null, now: number = Date.now()): string {

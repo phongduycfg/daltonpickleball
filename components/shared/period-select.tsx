@@ -3,15 +3,15 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { periodLabel } from '@/lib/dates';
+import { periodLabel, periodRange } from '@/lib/dates';
 import { cn } from '@/lib/utils';
 
-/** Ô chọn tháng (kỳ) — ghi vào query `?period=` để chia sẻ được đường dẫn */
+/** Ô chọn kỳ (Kỳ 5 · 25/09 – nay) — ghi vào query `?period=` để chia sẻ được đường dẫn */
 export function PeriodSelect({
   periods,
   value,
 }: {
-  periods: { id: string; month: number; year: number }[];
+  periods: { id: string; seq: number; startDate: string; endDate: string | null }[];
   value: string;
 }) {
   const router = useRouter();
@@ -33,7 +33,7 @@ export function PeriodSelect({
       >
         {periods.map((p) => (
           <option key={p.id} value={p.id}>
-            {periodLabel(p)}
+            {periodLabel(p)} · {periodRange(p)}
           </option>
         ))}
       </select>

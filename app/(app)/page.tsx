@@ -14,14 +14,14 @@ export default async function HomePage() {
   const homeSession = live ?? played.at(-1) ?? null;
   const next = data.sessions.filter((s) => s.status === 'scheduled').sort(byDateTime)[0] ?? null;
 
-  const monthTotals = Object.fromEntries(result.rows.map((r) => [r.memberId, r.losses]));
+  const periodTotals = Object.fromEntries(result.rows.map((r) => [r.memberId, r.losses]));
   const myRow = result.rows.find((r) => r.memberId === me.id);
   const isAccountant = me.id === accountantId;
 
   return (
     <>
       <LiveBanner />
-      {homeSession ? <LivePanel key={homeSession.id} session={homeSession} monthTotals={monthTotals} /> : <EmptyHome next={next} />}
+      {homeSession ? <LivePanel key={homeSession.id} session={homeSession} periodTotals={periodTotals} /> : <EmptyHome next={next} />}
       {played.length > 0 && myRow && !isAccountant ? <WalletCard row={myRow} status={data.payments[me.id] ?? 'none'} /> : null}
       {played.length > 0 && isAccountant ? <FundCard fund={fund} /> : null}
     </>

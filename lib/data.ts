@@ -30,7 +30,7 @@ interface RawSnapshot {
   } | null;
   members: { id: string; email: string; display_name: string; avatar_url: string | null; role: AppRole; skill: number }[];
   venues: { id: string; name: string; area: string; default_cost: number; is_active: boolean }[];
-  periods: { id: string; year: number; month: number; plan: number; fixed_rate: number; closed_at: string | null; has_snapshot: boolean }[];
+  periods: { id: string; seq: number; start_date: string; end_date: string | null; plan: number; fixed_rate: number; closed_at: string | null; has_snapshot: boolean }[];
   sessions: {
     id: string;
     period_id: string;
@@ -109,8 +109,9 @@ export const loadClub = cache(async (): Promise<ClubState | null> => {
   const venues: Venue[] = raw.venues.map((v) => ({ id: v.id, name: v.name, area: v.area, defaultCost: v.default_cost, isActive: v.is_active }));
   const periods: PeriodListItem[] = raw.periods.map((p) => ({
     id: p.id,
-    year: p.year,
-    month: p.month,
+    seq: p.seq,
+    startDate: p.start_date,
+    endDate: p.end_date,
     plan: p.plan === 2 ? 2 : 1,
     fixedRate: p.fixed_rate,
     closedAt: p.closed_at,

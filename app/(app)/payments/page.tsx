@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getAppContext, getArchivedSnapshot, snapshotOfPeriod } from '@/lib/data';
 import { viewFromSettlement, viewFromSnapshot } from '@/lib/payments-view';
-import { periodCode, periodLabel } from '@/lib/dates';
+import { periodLabel, periodRange } from '@/lib/dates';
 import { PeriodSelect } from '@/components/shared/period-select';
 import { PaymentsView } from '@/components/payments/payments-view';
 
@@ -39,8 +39,8 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
         excluded={data.excluded}
         sessionsByMember={sessionsByMember}
         report={report}
-        title={periodLabel(shown)}
-        fileCode={`${periodCode(shown)}-${shown.year}`}
+        title={`${periodLabel(shown)} (${periodRange(shown)})`}
+        fileCode={`Ky${shown.seq}-${shown.startDate}`}
       />
     </section>
   );

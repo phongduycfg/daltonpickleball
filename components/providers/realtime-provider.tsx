@@ -11,7 +11,7 @@ import { useClub } from './club-provider';
  *
  * - Ghi kèo (session_results): thay đổi được ĐẨY THẲNG vào giao diện qua `subscribeResults`
  *   → các máy khác thấy số trận thua nhảy ngay, không phải tải lại trang.
- *   Các số liệu phụ thuộc (tổng tháng, tiền) được làm mới gộp sau vài giây.
+ *   Các số liệu phụ thuộc (tổng kỳ, tiền) được làm mới gộp sau vài giây.
  * - Bảng khác (thanh toán, thu chi, lịch…): ít thay đổi → làm mới dữ liệu server (debounce).
  */
 export interface LiveBanner {

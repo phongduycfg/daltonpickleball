@@ -7,7 +7,7 @@ import { SessionSheet } from './session-sheet';
 /** Bọc SessionSheet kèm trạng thái ghi kèo riêng (dùng ở màn Sân đấu) */
 export function SessionSheetHost(props: {
   session: Session;
-  monthTotals: Record<string, number>;
+  periodTotals: Record<string, number>;
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
